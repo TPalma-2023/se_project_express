@@ -1,0 +1,9 @@
+const NOTFOUND_ERROR = 404;
+const INVALID_DATA_ERROR = 400;
+const DEFAULT_ERROR = 500;
+
+module.exports = {
+  NOTFOUND_ERROR,
+  INVALID_DATA_ERROR,
+  DEFAULT_ERROR,
+};

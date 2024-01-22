@@ -2,10 +2,12 @@
   "name": "se_project_express",
   "version": "1.0.0",
   "description": "Sprint 12 project tripleten",
-  "main": "app.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "npx eslint ."
+    "lint": "npx eslint .",
+    "start": "node app.js",
+    "dev": "nodemon app.js"
   },
   "author": "Tomas Palma",
   "license": "ISC",
