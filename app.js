@@ -6,21 +6,22 @@ const app = express();
 mongoose.connect(
   "mongodb://127.0.0.1:27017/wtwr_db",
   (r) => {
-    console.log("connected to DB");
+    console.log("connected to DB", r);
   },
   (e) => {
     "DB error";
   },
 );
 
+const routes = require("./routes/index");
+
 app.use((req, res, next) => {
   req.user = {
-    _id: "5d8b8592978f8bd833ca8133",
+    _id: "65ae9ca8e3545bbaa3404401",
   };
   next();
 });
 
-const routes = require("./routes");
 app.use(express.json());
 app.use(routes);
 
