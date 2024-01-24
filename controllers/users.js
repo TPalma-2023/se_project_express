@@ -1,4 +1,5 @@
 const User = require("../models/user");
+
 const {
   HTTP_NOT_FOUND,
   INVALID_DATA_ERROR,
@@ -9,7 +10,7 @@ const {
 const getUsers = (req, res) => {
   User.find({})
     .then((user) => res.status(200).send(user))
-    .catch(res.status(DEFAULT_ERROR).send({ message: "Error from getUsers" }));
+    .catch((err) => res.status(DEFAULT_ERROR).send({ message: err.message }));
 };
 
 // GET /users/:userId - returns a user by _id
