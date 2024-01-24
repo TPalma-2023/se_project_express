@@ -1,4 +1,3 @@
-const express = require("express");
 const ClothingItem = require("../models/clothingItem");
 const {
   HTTP_NOT_FOUND,
@@ -18,45 +17,42 @@ const createItem = (req, res) => {
         return res
           .status(INVALID_DATA_ERROR)
           .send({ message: "Invalid request error for createItem" });
-      } else {
-        return res
-          .status(DEFAULT_ERROR)
-          .send({ message: "Error from createItems" });
       }
+      return res
+        .status(DEFAULT_ERROR)
+        .send({ message: "Error from createItems" });
     });
 };
 
 const getItems = (req, res) => {
   ClothingItem.find({})
     .then((items) => res.send(items))
-    .catch((e) => {
-      res.status(DEFAULT_ERROR).send({ message: "Error from getItems" });
-    });
+    .catch(res.status(DEFAULT_ERROR).send({ message: "Error from getItems" }));
 };
 
-const updateItem = (req, res) => {
-  const { itemId } = req.params;
-  const { imageUrl } = req.body;
+// const updateItem = (req, res) => {
+//   const { itemId } = req.params;
+//   const { imageUrl } = req.body;
 
-  ClothingItem.findByIdAndUpdate(itemId, { $set: { imageUrl } })
-    .orFail()
-    .then((item) => res.status.send(200).send({ data: item }))
-    .catch((e) => {
-      if (e.name === INVALID_DATA_ERROR) {
-        res
-          .status(INVALID_DATA_ERROR)
-          .send({ message: "Invalid data in updateItems" });
-      } else if (e.name === "DocumentNotFoundError") {
-        res
-          .status(HTTP_NOT_FOUND)
-          .send({ message: "Item not found in updateItem" });
-      } else {
-        res
-          .status(DEFAULT_ERROR)
-          .send({ message: "Get updateItems failed", e });
-      }
-    });
-};
+//   ClothingItem.findByIdAndUpdate(itemId, { $set: { imageUrl } })
+//     .orFail()
+//     .then((item) => res.status.send(200).send({ data: item }))
+//     .catch((e) => {
+//       if (e.name === INVALID_DATA_ERROR) {
+//         res
+//           .status(INVALID_DATA_ERROR)
+//           .send({ message: "Invalid data in updateItems" });
+//       } else if (e.name === "DocumentNotFoundError") {
+//         res
+//           .status(HTTP_NOT_FOUND)
+//           .send({ message: "Item not found in updateItem" });
+//       } else {
+//         res
+//           .status(DEFAULT_ERROR)
+//           .send({ message: "Get updateItems failed", e });
+//       }
+//     });
+// };
 
 const deleteItem = (req, res) => {
   const { itemId } = req.params;
@@ -74,13 +70,12 @@ const deleteItem = (req, res) => {
           .status(HTTP_NOT_FOUND)
           .send({ message: "Item not found in deleteItems" });
       } else {
-        res.status(DEFAULT_ERROR).send({ message: "Get deleteItem failed", e });
+        res.status(DEFAULT_ERROR).send({ message: "Get deleteItem failed" });
       }
     });
 };
 
 const likeItem = (req, res) => {
-  console.log(req.user._id);
   const userId = req.user._id;
   const { itemId } = req.params;
 
@@ -94,8 +89,6 @@ const likeItem = (req, res) => {
       res.send({ data: item });
     })
     .catch((err) => {
-      console.error(err);
-      console.error(err.name);
       if (err.name === `DocumentNotFoundError`) {
         res
           .status(HTTP_NOT_FOUND)
@@ -111,7 +104,6 @@ const likeItem = (req, res) => {
 };
 
 const dislikeItem = (req, res) => {
-  console.log(req.user._id);
   const userId = req.user._id;
   const { itemId } = req.params;
 
@@ -125,7 +117,6 @@ const dislikeItem = (req, res) => {
       res.send({ data: item });
     })
     .catch((err) => {
-      console.error(err);
       if (err.name === `DocumentNotFoundError`) {
         res
           .status(HTTP_NOT_FOUND)
@@ -143,7 +134,7 @@ const dislikeItem = (req, res) => {
 module.exports = {
   createItem,
   getItems,
-  updateItem,
+  // updateItem,
   deleteItem,
   likeItem,
   dislikeItem,

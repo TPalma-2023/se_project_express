@@ -9,9 +9,7 @@ const {
 const getUsers = (req, res) => {
   User.find({})
     .then((user) => res.status(200).send(user))
-    .catch((e) => {
-      res.status(DEFAULT_ERROR).send({ message: "Error from getUsers" });
-    });
+    .catch(res.status(DEFAULT_ERROR).send({ message: "Error from getUsers" }));
 };
 
 // GET /users/:userId - returns a user by _id
@@ -24,7 +22,9 @@ const getUser = (req, res) => {
       if (e.name === "CastError") {
         res.status(INVALID_DATA_ERROR).send({ message: "Invalid input data" });
       } else if (e.name === "DocumentNotFoundError") {
-        res.status(HTTP_NOT_FOUND).send({ message: e.message });
+        res
+          .status(HTTP_NOT_FOUND)
+          .send({ message: "DocumentNotFoundError from getUser" });
       } else {
         res.status(DEFAULT_ERROR).send({ message: "Error from getUser" });
       }
