@@ -3,6 +3,7 @@ const {
   HTTP_NOT_FOUND,
   INVALID_DATA_ERROR,
   DEFAULT_ERROR,
+  FORBIDDEN_ERROR,
 } = require("../utils/errors");
 
 const createItem = (req, res) => {
@@ -30,35 +31,16 @@ const getItems = (req, res) => {
     .catch((err) => res.status(DEFAULT_ERROR).send({ message: err.message }));
 };
 
-// const updateItem = (req, res) => {
-//   const { itemId } = req.params;
-//   const { imageUrl } = req.body;
-
-//   ClothingItem.findByIdAndUpdate(itemId, { $set: { imageUrl } })
-//     .orFail()
-//     .then((item) => res.status.send(200).send({ data: item }))
-//     .catch((e) => {
-//       if (e.name === INVALID_DATA_ERROR) {
-//         res
-//           .status(INVALID_DATA_ERROR)
-//           .send({ message: "Invalid data in updateItems" });
-//       } else if (e.name === "DocumentNotFoundError") {
-//         res
-//           .status(HTTP_NOT_FOUND)
-//           .send({ message: "Item not found in updateItem" });
-//       } else {
-//         res
-//           .status(DEFAULT_ERROR)
-//           .send({ message: "Get updateItems failed", e });
-//       }
-//     });
-// };
-
 const deleteItem = (req, res) => {
   const { itemId } = req.params;
 
   ClothingItem.findByIdAndDelete(itemId)
     .orFail()
+    .then((item) => {
+      if (!item.owner.equals(req.user._id)) {
+        res.status(FORBIDDEN_ERROR).send({ message: "Action forbidden" });
+      }
+    })
     .then(() => res.send({ message: "Item was deleted" }))
     .catch((e) => {
       if (e.name === "CastError") {
@@ -134,7 +116,6 @@ const dislikeItem = (req, res) => {
 module.exports = {
   createItem,
   getItems,
-  // updateItem,
   deleteItem,
   likeItem,
   dislikeItem,
