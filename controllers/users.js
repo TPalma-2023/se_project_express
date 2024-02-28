@@ -12,7 +12,6 @@ const {
   DB_ERROR,
 } = require("../utils/errors");
 
-// POST /users — creates a new user
 const createUser = (req, res) => {
   const { name, avatar, email, password } = req.body;
 
