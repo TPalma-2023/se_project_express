@@ -11,10 +11,10 @@ const createItem = (req, res) => {
 
   ClothingItem.create({ name, weather, imageUrl, owner: req.user._id })
     .then((item) => {
-      res.send({ data: item });
+      res.status(200).send({ data: item });
     })
     .catch((e) => {
-      if (e.name === "ValidationError") {
+      if (e.name === "ValidationError" || e.name === "CastError") {
         return res
           .status(INVALID_DATA_ERROR)
           .send({ message: "Invalid request error for createItem" });
@@ -34,25 +34,25 @@ const getItems = (req, res) => {
 const deleteItem = (req, res) => {
   const { itemId } = req.params;
 
-  ClothingItem.findByIdAndDelete(itemId)
+  return ClothingItem.findById({ _id: itemId })
     .orFail()
     .then((item) => {
-      if (!item.owner.equals(req.user._id)) {
-        res.status(FORBIDDEN_ERROR).send({ message: "Action forbidden" });
+      if (item.owner.toString() !== req.user._id.toString()) {
+        return res
+          .status(FORBIDDEN_ERROR)
+          .send({ message: "Action forbidden" });
       }
+      return ClothingItem.deleteOne({ _id: itemId }).then(() => {
+        res.status(200).send({ data: item, message: "Item was deleted" });
+      });
     })
-    .then(() => res.send({ message: "Item was deleted" }))
     .catch((e) => {
       if (e.name === "CastError") {
-        res
-          .status(INVALID_DATA_ERROR)
-          .send({ message: "Invalid data in deleteItem" });
+        res.status(INVALID_DATA_ERROR).send({ message: "Invalid data" });
       } else if (e.name === "DocumentNotFoundError") {
-        res
-          .status(HTTP_NOT_FOUND)
-          .send({ message: "Item not found in deleteItems" });
-      } else {
-        res.status(DEFAULT_ERROR).send({ message: "Get deleteItem failed" });
+        res.status(HTTP_NOT_FOUND).send({ message: "Document not found" });
+      } else if (e.name === "DefaultError") {
+        res.status(DEFAULT_ERROR).send({ message: "Server error" });
       }
     });
 };
