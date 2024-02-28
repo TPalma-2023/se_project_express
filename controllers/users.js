@@ -47,14 +47,12 @@ const createUser = (req, res) => {
       if (e.name === "ValidationError") {
         return res
           .status(INVALID_DATA_ERROR)
-          .send({ message: "Invalid input on createUser" });
+          .send({ message: "Invalid input" });
       }
       if (e.message === "Duplicate email") {
         return res.status(CONFLICT_ERROR).send({ message: "Duplicate email" });
       }
-      return res
-        .status(DEFAULT_ERROR)
-        .send({ message: "Error from createUser" });
+      return res.status(DEFAULT_ERROR).send({ message: "Error creating user" });
     });
 };
 

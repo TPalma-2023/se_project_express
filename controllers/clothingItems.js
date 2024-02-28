@@ -19,9 +19,7 @@ const createItem = (req, res) => {
           .status(INVALID_DATA_ERROR)
           .send({ message: "Invalid request error for createItem" });
       }
-      return res
-        .status(DEFAULT_ERROR)
-        .send({ message: "Error from createItems" });
+      return res.status(DEFAULT_ERROR).send({ message: "Error creating item" });
     });
 };
 
@@ -33,11 +31,10 @@ const getItems = (req, res) => {
 
 const deleteItem = (req, res) => {
   const { itemId } = req.params;
-
   return ClothingItem.findById({ _id: itemId })
     .orFail()
     .then((item) => {
-      if (item.owner.toString() !== req.user._id.toString()) {
+      if (!item.owner.equals(req.user._id)) {
         return res
           .status(FORBIDDEN_ERROR)
           .send({ message: "Action forbidden" });
@@ -80,7 +77,7 @@ const likeItem = (req, res) => {
           message: "Invalid ID passed",
         });
       } else {
-        res.status(DEFAULT_ERROR).send({ message: "likeItem failed" });
+        res.status(DEFAULT_ERROR).send({ message: "Failed to like item" });
       }
     });
 };
