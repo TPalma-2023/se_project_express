@@ -11,7 +11,7 @@ const createItem = (req, res) => {
 
   ClothingItem.create({ name, weather, imageUrl, owner: req.user._id })
     .then((item) => {
-      res.status(200).send({ data: item });
+      res.send({ data: item });
     })
     .catch((e) => {
       if (e.name === "ValidationError" || e.name === "CastError") {
@@ -40,7 +40,7 @@ const deleteItem = (req, res) => {
           .send({ message: "Action forbidden" });
       }
       return ClothingItem.deleteOne({ _id: itemId }).then(() => {
-        res.status(200).send({ data: item, message: "Item was deleted" });
+        res.send({ data: item, message: "Item was deleted" });
       });
     })
     .catch((e) => {

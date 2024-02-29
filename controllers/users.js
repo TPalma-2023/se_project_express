@@ -9,7 +9,6 @@ const {
   DEFAULT_ERROR,
   CONFLICT_ERROR,
   AUTHORIZATION_ERROR,
-  DB_ERROR,
 } = require("../utils/errors");
 
 const createUser = (req, res) => {
@@ -41,9 +40,6 @@ const createUser = (req, res) => {
       }),
     )
     .catch((e) => {
-      if (e.code === 11000 || e.name === "MongoServerError") {
-        return res.status(DB_ERROR).send({ message: "DB error" });
-      }
       if (e.name === "ValidationError") {
         return res
           .status(INVALID_DATA_ERROR)
@@ -70,15 +66,15 @@ const login = (req, res) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
         expiresIn: "7d",
       });
-      res.status(200).send({ data: token });
+      res.send({ data: token });
     })
     .catch((e) => {
-      if (e.message === "Invalid email or password") {
+      if (e.message === "Incorrect email or password") {
         res
-          .status(INVALID_DATA_ERROR)
+          .status(AUTHORIZATION_ERROR)
           .send({ message: "Invalid email or password" });
       } else {
-        res.status(AUTHORIZATION_ERROR).send({ message: "DB error" });
+        res.status(DEFAULT_ERROR).send({ message: "DB error" });
       }
     });
 };
