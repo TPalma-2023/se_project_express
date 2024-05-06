@@ -13,10 +13,10 @@ app.use(routes);
 mongoose
   .connect("mongodb://127.0.0.1:27017/wtwr_db")
   .then(() => {
-    console.log("connected to DB");
+    // console.log("connected to DB");
   })
-  .catch((err) => console.error(err));
-
+  .catch();
+// (err) => console.error(err)
 app.listen(PORT, () => {
-  console.log(`App listening at port ${PORT}`);
+  // console.log(`App listening at port ${PORT}`);
 });
