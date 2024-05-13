@@ -1,14 +1,12 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
-
+const { errors } = require("celebrate");
 const { PORT = 3001 } = process.env;
 const app = express();
 const routes = require("./routes/index");
-
-app.use(express.json());
-app.use(cors());
-app.use(routes);
+const errorHandler = require("./middlewares/error-handler");
+const { requestLogger, errorLogger } = require("./middlewares/logger");
 
 mongoose
   .connect("mongodb://127.0.0.1:27017/wtwr_db")
@@ -17,6 +15,17 @@ mongoose
   })
   .catch();
 // (err) => console.error(err)
+
+app.use(express.json());
+app.use(cors());
+app.use(requestLogger);
+app.use(routes);
+
+app.use(errorLogger);
+
+app.use(errors());
+app.use(errorHandler);
+
 app.listen(PORT, () => {
   // console.log(`App listening at port ${PORT}`);
 });
