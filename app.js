@@ -5,9 +5,13 @@ const mongoose = require("mongoose");
 
 const { errors } = require("celebrate");
 
+const helmet = require("helmet");
+
 const { PORT = 3001 } = process.env;
 const app = express();
 const routes = require("./routes/index");
+
+app.use(helmet());
 const errorHandler = require("./middlewares/error-handler");
 const { requestLogger, errorLogger } = require("./middlewares/logger");
 
