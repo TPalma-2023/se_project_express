@@ -6,6 +6,11 @@ The backend of WTWR utilizes the MERN stack, a robust combination of MongoDB, Ex
 
 The back-end project is focused on creating a server for the WTWR application. You’ll gain a deeper understanding of how to work with databases, set up security and testing, and deploy web applications on a remote machine. The eventual goal is to create a server with an API and user authorization.
 
+## Links
+
+Frontend - whattowear.twilightparadox.com
+Backend - api.whattowear.twilightparadox.com
+
 ## Running the Project
 
 `npm run start` — to launch the server
