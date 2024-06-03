@@ -22,7 +22,7 @@ const createUser = (req, res, next) => {
   return User.findOne({ email })
     .then((existingUser) => {
       if (existingUser) {
-        return next(ConflictError("Duplicate email"));
+        return next(new ConflictError("Duplicate email"));
       }
       return bcrypt.hash(password, 10);
     })
